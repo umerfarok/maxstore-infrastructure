@@ -1,0 +1,5 @@
+.terraform
+key.pem
+privatekeygithub.pem
+terraform.tfstate
+terrform.tfstate

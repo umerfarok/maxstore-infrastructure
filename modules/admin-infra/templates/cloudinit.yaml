@@ -1,0 +1,31 @@
+#cloud-config
+users:
+  - default
+  - name: maxstore
+    gecos: maxstore
+    primary_group: maxstore
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, admin
+    ssh_import_id: None
+    lock_passwd: false
+    ssh_authorized_keys:
+      - ${public_ssh_key}
+write_files:
+  - path: /home/maxstore/.ssh/id_rsa
+    owner: maxstore:maxstore
+    permissions: '0600'
+    content: |
+      ${private_ssh_key}
+  - path: /home/maxstore/.ssh/config
+    owner: maxstore:maxstore
+    permissions: '0600'
+    content: |
+      Host github.com
+        StrictHostKeyChecking no
+runcmd:
+  - apt update && apt upgrade -y
+  - curl -fsSL https://get.docker.com | sh
+  - curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  - chmod +x /usr/local/bin/docker-compose
+  - su - maxstore -c 'git clone git@github.com:umerfarok/Dev-deps.git /home/maxstore/Dev-deps'
+  - su - maxstore -c 'cd /home/maxstore/Dev-deps && docker-compose up -d'
