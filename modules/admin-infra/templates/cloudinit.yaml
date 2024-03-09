@@ -9,13 +9,13 @@ users:
     ssh_import_id: None
     lock_passwd: false
     ssh_authorized_keys:
-      - ${public_ssh_key}
+      - ${file("../../../key.pem")}
 write_files:
   - path: /home/maxstore/.ssh/id_rsa
     owner: maxstore:maxstore
     permissions: '0600'
     content: |
-      ${private_ssh_key}
+      ${file("../../../key.pem")}
   - path: /home/maxstore/.ssh/config
     owner: maxstore:maxstore
     permissions: '0600'

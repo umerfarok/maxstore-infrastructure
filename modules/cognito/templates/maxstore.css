@@ -1,0 +1,57 @@
+
+
+.submitButton-customizable {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.submitButton-customizable:hover {
+  background-color: #45a049;
+}
+
+.errorMessage-customizable {
+  color: red;
+  margin-bottom: 10px;
+}
+
+.label-customizable {
+  display: block;
+  margin-top: 10px;
+  text-align: right;
+  color: #888;
+  text-decoration: none;
+}
+
+
+.textDescription-customizable {
+  display: block;
+  margin-top: 10px;
+  text-align: center;
+  color: #888;
+  text-decoration: none;
+}
+
+
+
+.inputField-customizable {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  color: #333;
+  background-color: #f9f9f9;
+}
+
+.inputField-customizable:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
