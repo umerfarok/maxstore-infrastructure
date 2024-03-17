@@ -163,17 +163,17 @@ resource "null_resource" "create_user" {
   }
 }
 
-# for macos
-resource "null_resource" "create_user" {
-  depends_on = [aws_cognito_user_pool.user_pool]
+# # for macos
+# resource "null_resource" "create_user" {
+#   depends_on = [aws_cognito_user_pool.user_pool]
 
-  provisioner "local-exec" {
-    command = <<EOF
-      user_exists=$(aws cognito-idp admin-get-user --user-pool-id ${aws_cognito_user_pool.user_pool.id} --username maxstore-tf --query 'Username' --output text 2>/dev/null)
-      if [ "$user_exists" != "maxstore-tf" ]; then
-        aws cognito-idp admin-create-user --user-pool-id ${aws_cognito_user_pool.user_pool.id} --username maxstore-tf --user-attributes Name=email,Value=maxstoretf@gmail.com Name=email_verified,Value=true --temporary-password Temp@1234
-      fi
-    EOF
-    interpreter = ["/bin/sh", "-c"]
-  }
-}
+#   provisioner "local-exec" {
+#     command = <<EOF
+#       user_exists=$(aws cognito-idp admin-get-user --user-pool-id ${aws_cognito_user_pool.user_pool.id} --username maxstore-tf --query 'Username' --output text 2>/dev/null)
+#       if [ "$user_exists" != "maxstore-tf" ]; then
+#         aws cognito-idp admin-create-user --user-pool-id ${aws_cognito_user_pool.user_pool.id} --username maxstore-tf --user-attributes Name=email,Value=maxstoretf@gmail.com Name=email_verified,Value=true --temporary-password Temp@1234
+#       fi
+#     EOF
+#     interpreter = ["/bin/sh", "-c"]
+#   }
+# }
