@@ -157,6 +157,7 @@ resource "null_resource" "create_user" {
       $user_exists = $(aws cognito-idp admin-get-user --user-pool-id ${aws_cognito_user_pool.user_pool.id} --username maxstore-tf --query 'Username' --output text 2>$null)
       if ($user_exists -ne "maxstore-tf") {
         aws cognito-idp admin-create-user --user-pool-id ${aws_cognito_user_pool.user_pool.id} --username maxstore-tf --user-attributes Name=email,Value=maxstoretf@gmail.com Name=email_verified,Value=true --temporary-password Temp@1234
+        aws cognito-idp admin-add-user-to-group --user-pool-id ${aws_cognito_user_pool.user_pool.id} --username maxstore-tf --group-name SuperAdmin
       }
     EOF
     interpreter = ["PowerShell", "-Command"]
@@ -172,6 +173,7 @@ resource "null_resource" "create_user" {
 #       user_exists=$(aws cognito-idp admin-get-user --user-pool-id ${aws_cognito_user_pool.user_pool.id} --username maxstore-tf --query 'Username' --output text 2>/dev/null)
 #       if [ "$user_exists" != "maxstore-tf" ]; then
 #         aws cognito-idp admin-create-user --user-pool-id ${aws_cognito_user_pool.user_pool.id} --username maxstore-tf --user-attributes Name=email,Value=maxstoretf@gmail.com Name=email_verified,Value=true --temporary-password Temp@1234
+          # aws cognito-idp admin-add-user-to-group --user-pool-id ${aws_cognito_user_pool.user_pool.id} --username maxstore-tf --group-name SuperAdmin
 #       fi
 #     EOF
 #     interpreter = ["/bin/sh", "-c"]
