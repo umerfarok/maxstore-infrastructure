@@ -8,6 +8,16 @@ name = var.user_pool_name
       priority = 1
     }
   }
+   schema {
+    name                = "custom:tenantID"
+    attribute_data_type = "String"
+    mutable             = true
+  }
+  
+  lifecycle {
+    ignore_changes = [schema]
+  }
+  
 
   alias_attributes = ["email", "preferred_username"]
   auto_verified_attributes = [
@@ -52,7 +62,7 @@ resource "aws_cognito_user_pool_client" "user_pool_client" {
   auth_session_validity                = 3
   callback_urls = concat(
     ["https://${var.webapp_domain}/"],
-    var.localhost_callback ? ["http://localhost:3000/"] : []
+    var.localhost_callback ? ["http://localhost:3000/","https://e-store-react.vercel.app/"] : []
   )
   enable_token_revocation                       = true
   enable_propagate_additional_user_context_data = false
@@ -63,7 +73,7 @@ resource "aws_cognito_user_pool_client" "user_pool_client" {
   generate_secret = false
   logout_urls = concat(
     ["https://${var.webapp_domain}/"],
-    var.localhost_callback ? ["http://localhost:3000/"] : []
+    var.localhost_callback ? ["http://localhost:3000/","https://e-store-react.vercel.app/"] : []
   )
   prevent_user_existence_errors = "ENABLED"
   token_validity_units {
@@ -100,4 +110,70 @@ resource "aws_cognito_user_pool_ui_customization" "ui_customization" {
   user_pool_id = aws_cognito_user_pool.user_pool.id
   css          = file("${path.module}/templates/maxstore.css")
   image_file   = filebase64("${path.module}/templates/logo.png")
+}
+
+
+# commenting this not supported yet
+# resource "aws_cognito_identity_provider" "google" {
+#   user_pool_id  = aws_cognito_user_pool.user_pool.id
+#   provider_name = "Google"
+#   provider_type = "Google"
+
+#   attribute_mapping = {
+#     email = "email"
+#   }
+
+#   provider_details = {
+#     client_id     = var.google_client_id
+#     client_secret = var.google_client_secret
+#     authorize_scopes = "profile email openid"
+#   }
+
+#   idp_identifiers = []
+# }
+
+# resource "aws_cognito_identity_provider" "facebook" {
+#   user_pool_id  = aws_cognito_user_pool.user_pool.id
+#   provider_name = "Facebook"
+#   provider_type = "Facebook"
+
+#   attribute_mapping = {
+#     email = "email"
+#   }
+
+#   provider_details = {
+#     client_id     = var.facebook_app_id
+#     client_secret = var.facebook_app_secret
+#     authorize_scopes = "public_profile,email"
+#   }
+
+#   idp_identifiers = []
+# }
+resource "null_resource" "create_user" {
+  depends_on = [aws_cognito_user_pool.user_pool]
+
+  provisioner "local-exec" {
+    command = <<EOF
+      $user_exists = $(aws cognito-idp admin-get-user --user-pool-id ${aws_cognito_user_pool.user_pool.id} --username maxstore-tf --query 'Username' --output text 2>$null)
+      if ($user_exists -ne "maxstore-tf") {
+        aws cognito-idp admin-create-user --user-pool-id ${aws_cognito_user_pool.user_pool.id} --username maxstore-tf --user-attributes Name=email,Value=maxstoretf@gmail.com Name=email_verified,Value=true --temporary-password Temp@1234
+      }
+    EOF
+    interpreter = ["PowerShell", "-Command"]
+  }
+}
+
+# for macos
+resource "null_resource" "create_user" {
+  depends_on = [aws_cognito_user_pool.user_pool]
+
+  provisioner "local-exec" {
+    command = <<EOF
+      user_exists=$(aws cognito-idp admin-get-user --user-pool-id ${aws_cognito_user_pool.user_pool.id} --username maxstore-tf --query 'Username' --output text 2>/dev/null)
+      if [ "$user_exists" != "maxstore-tf" ]; then
+        aws cognito-idp admin-create-user --user-pool-id ${aws_cognito_user_pool.user_pool.id} --username maxstore-tf --user-attributes Name=email,Value=maxstoretf@gmail.com Name=email_verified,Value=true --temporary-password Temp@1234
+      fi
+    EOF
+    interpreter = ["/bin/sh", "-c"]
+  }
 }

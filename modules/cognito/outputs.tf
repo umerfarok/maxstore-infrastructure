@@ -15,3 +15,7 @@ output "endpoint" {
   value = "https://${aws_cognito_user_pool.user_pool.endpoint}"
   
 }
+
+output "user_pool_id" {
+  value = aws_cognito_user_pool.user_pool.id
+}
