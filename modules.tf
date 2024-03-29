@@ -16,3 +16,10 @@ module "cognito" {
     cognito_domain = var.cognito_domain
     allowed_oauth_flows = var.allowed_oauth_flows
 }
+
+module "s3" {
+    source = "./modules/s3"
+    bucket_name = var.bucket_name
+    bucket_acl = var.bucket_acl
+  
+}

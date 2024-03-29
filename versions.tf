@@ -7,7 +7,7 @@ terraform {
         }
     }
     backend "s3" {
-        bucket = "maxstore-terraform-admin"
+        bucket = "maxstore-terraform-admin-dev"
         key    = "maxstore/terraform.tfstate"
         region = "us-east-1"
     }

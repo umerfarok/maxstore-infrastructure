@@ -55,3 +55,13 @@ variable "cognito_domain" {
   type        = string
   description = "Cognito domain"
 }
+
+variable "bucket_name" {
+  type        = string
+  description = "The name of the bucket"
+}
+
+variable "bucket_acl" {
+  type        = string
+  description = "The access control list setting for the bucket"
+}
