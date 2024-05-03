@@ -28,13 +28,13 @@ name = var.user_pool_name
   }
 
   admin_create_user_config {
-    allow_admin_create_user_only = true
-    invite_message_template {
-      email_message = "Your username is {username} and temporary password is {####}"
-      email_subject = "Welcome to Maxstore!"
-      sms_message   = "Your username is {username} and temporary password is {####}"
-    }
+  allow_admin_create_user_only = false
+  invite_message_template {
+    email_message = "Welcome {username}, your temporary password is {####}. Please change it after your first login."
+    email_subject = "Welcome to Our Service!"
+    sms_message   = "Welcome {username}, your temporary password is {####}. Please change it after your first login."
   }
+}
 
   password_policy {
     minimum_length                   = 8
