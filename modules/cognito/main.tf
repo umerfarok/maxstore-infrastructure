@@ -53,13 +53,13 @@ name = var.user_pool_name
 resource "aws_cognito_user_pool_client" "user_pool_client" {
   name                                 = var.client_name
   user_pool_id                         = aws_cognito_user_pool.user_pool.id
-  access_token_validity                = 5
-  id_token_validity                    = 5
+  access_token_validity                = 60
+  id_token_validity                    = 60
   refresh_token_validity               = 30
   allowed_oauth_flows_user_pool_client = true
   allowed_oauth_flows                  = ["code"]
   allowed_oauth_scopes                 = ["openid", "profile", "email", "phone", "aws.cognito.signin.user.admin"]
-  auth_session_validity                = 3
+  auth_session_validity                = 15
   callback_urls = concat(
     ["https://${var.webapp_domain}/"],
     var.localhost_callback ? ["http://localhost:3000/","https://e-store-react.vercel.app/"] : []
@@ -112,7 +112,7 @@ resource "aws_cognito_user_pool_ui_customization" "ui_customization" {
   image_file   = filebase64("${path.module}/templates/logo.png")
 }
 
-
+  
 # commenting this not supported yet
 # resource "aws_cognito_identity_provider" "google" {
 #   user_pool_id  = aws_cognito_user_pool.user_pool.id
